@@ -17,15 +17,15 @@ import {
 } from "lucide-react";
 
 const StudentData = () => {
-  const { branch = "", section = "" } = useParams();
+  const { branch = "", year = "" } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
   const [selectedStudent, setSelectedStudent] = useState<StudentWithProfile | null>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const { data: students, isLoading, isError } = useQuery<StudentWithProfile[]>({
-    queryKey: [`/api/students?branch=${branch}&section=${section}`],
-    enabled: !!branch && !!section,
+    queryKey: [`/api/students?branch=${branch}&year=${year}`],
+    enabled: !!branch && !!year,
   });
 
   const filteredStudents = students?.filter(student => 
@@ -36,7 +36,7 @@ const StudentData = () => {
   const handleExportToExcel = () => {
     if (students && students.length > 0) {
       try {
-        exportStudentsToExcel(students, `${branch}_${section}_students`);
+        exportStudentsToExcel(students, `${branch}_${year}_students`);
         toast({
           title: "Success",
           description: "Student data exported to Excel successfully",
@@ -62,7 +62,7 @@ const StudentData = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-            {branch} - Section {section}
+            {branch} - {year} year
           </h1>
           <p className="mt-2 text-lg text-gray-500 dark:text-gray-400">
             Student coding profiles and statistics
@@ -116,7 +116,7 @@ const StudentData = () => {
         <Card>
           <CardContent className="pt-6 pb-6 text-center">
             <p className="text-gray-500 dark:text-gray-400">
-              {searchTerm ? "No students match your search criteria." : "No students found in this section."}
+              {searchTerm ? "No students match your search criteria." : "No students found in this year."}
             </p>
           </CardContent>
         </Card>
@@ -151,8 +151,8 @@ const StudentData = () => {
                       <span className="font-medium">{student.branch}</span>
                     </div>
                     <div className="text-sm">
-                      <span className="text-gray-500 dark:text-gray-400">Section: </span>
-                      <span className="font-medium">{student.section}</span>
+                      <span className="text-gray-500 dark:text-gray-400">year: </span>
+                      <span className="font-medium">{student.year}</span>
                     </div>
                   </div>
                 </div>

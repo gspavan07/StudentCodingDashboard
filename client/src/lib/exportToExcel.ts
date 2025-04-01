@@ -5,7 +5,7 @@ interface ExcelRow {
   "Roll Number": string;
   Name: string;
   Branch: string;
-  Section: string;
+  year: string;
   HackerRank: string;
   LeetCode_Easy: number;
   LeetCode_Medium: number;
@@ -17,7 +17,7 @@ interface ExcelRow {
   GFG_Hard: number;
   "Total Problems": number;
   "Total Contests": number;
-  "Grand Total": number;
+  "Total Score": number;
 }
 
 /**
@@ -70,7 +70,7 @@ export function formatStudentForExcel(student: StudentWithProfile): ExcelRow {
     "Roll Number": student.rollNumber,
     Name: student.name,
     Branch: student.branch,
-    Section: student.section,
+    year: student.year,
     HackerRank: hackerRank,
     LeetCode_Easy: profile?.leetCodeEasy || 0,
     LeetCode_Medium: profile?.leetCodeMedium || 0,
@@ -82,7 +82,7 @@ export function formatStudentForExcel(student: StudentWithProfile): ExcelRow {
     GFG_Hard: profile?.gfgHard || 0,
     "Total Problems": totalProblems,
     "Total Contests": totalContests,
-    "Grand Total": grandTotal,
+    "Total Score": grandTotal,
   };
 }
 
@@ -140,7 +140,7 @@ export function exportStudentsToExcel(
         "Roll Number": student.rollNumber,
         Name: student.name,
         Branch: student.branch,
-        Section: student.section,
+        year: student.year,
         HackerRank: "N/A",
         LeetCode: "N/A",
         CodeChef: "N/A",
@@ -159,7 +159,7 @@ export function exportStudentsToExcel(
     { wch: 15 }, // Roll Number
     { wch: 30 }, // Name
     { wch: 10 }, // Branch
-    { wch: 10 }, // Section
+    { wch: 10 }, // year
     { wch: 12 }, // HackerRank
     { wch: 13 }, // LeetCode-easy
     { wch: 12 }, // LeetCode-medium

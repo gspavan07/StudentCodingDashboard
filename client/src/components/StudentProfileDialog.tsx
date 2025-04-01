@@ -68,7 +68,7 @@ export function StudentProfileDialog({
           ["Name", student.name],
           ["Roll Number", student.rollNumber],
           ["Branch", student.branch],
-          ["Section", student.section || "N/A"]
+          ["year", student.year || "N/A"]
         ];
   
         const codingStats = [
@@ -163,7 +163,7 @@ export function StudentProfileDialog({
                 {student.rollNumber}
               </p>
               <p className="text-gray-600 dark:text-gray-300 mb-4">
-                {student.branch} {student.section ? `- ${student.section}` : ""}
+                {student.branch} {student.year ? `- ${student.year}` : ""}
               </p>
 
               <div className="w-full mt-4">

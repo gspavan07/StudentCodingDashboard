@@ -2,3 +2,6 @@ pandas
 bs4
 requests
 openpyxl
+
+#installation cmd 
+# pip install -r .\requirements.txt 

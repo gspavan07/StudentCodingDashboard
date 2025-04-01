@@ -8,37 +8,37 @@ const branches = [
     code: "CSE",
     name: "Computer Science & Engineering",
     description: "Core computer science with software engineering principles",
-    sections: ["A", "B", "C", "D"]
+    years: ["1st","2nd","3rd","4th"]
   },
   {
     code: "AIML",
     name: "AI & Machine Learning",
     description: "Specialized in artificial intelligence and ML algorithms",
-    sections: ["A", "B"]
+    years: ["1st","2nd","3rd","4th"]
   },
   {
     code: "DS",
     name: "Data Science",
     description: "Focused on data analysis, visualization and predictive modeling",
-    sections: ["A", "B"]
+    years: ["1st","2nd","3rd","4th"]
   },
   {
     code: "ECE",
     name: "Electronics & Communication",
     description: "Study of electronic devices, circuits, and communication systems",
-    sections: ["A", "B", "C"]
+    years: ["1st","2nd","3rd","4th"]
   },
   {
     code: "IT",
     name: "Information Technology",
     description: "Emphasis on information systems and technology management",
-    sections: ["A", "B", "C"]
+    years: ["1st","2nd","3rd","4th"]
   },
   {
     code: "MCA",
     name: "MCA",
     description: "Master's program in computer applications",
-    sections: ["A"]
+    years: ["1st","2nd"]
   }
 ];
 
@@ -50,7 +50,7 @@ const Branches = () => {
           Browse by Branch
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-400">
-          Select a branch and section to view student coding profiles
+          Select a branch and year to view student coding profiles
         </p>
       </div>
 
@@ -64,12 +64,12 @@ const Branches = () => {
               <p className="text-gray-500 dark:text-gray-400 mb-6">{branch.description}</p>
               
               <div className="space-y-3">
-                <h4 className="text-sm font-medium text-gray-900 dark:text-white">Sections:</h4>
+                <h4 className="text-sm font-medium text-gray-900 dark:text-white">years:</h4>
                 <div className="grid grid-cols-2 gap-2">
-                  {branch.sections.map((section) => (
-                    <Link key={section} href={`/branches/${branch.code}/${section}`}>
+                  {branch.years.map((year) => (
+                    <Link key={year} href={`/branches/${branch.code}/${year}`}>
                       <Button variant="outline" className="w-full justify-between">
-                        Section {section}
+                         {year} Year
                         <ChevronRight className="h-4 w-4 ml-2" />
                       </Button>
                     </Link>

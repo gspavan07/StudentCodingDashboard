@@ -22,7 +22,7 @@ export const students = pgTable("students", {
   rollNumber: text("roll_number").notNull().unique(),
   name: text("name").notNull(),
   branch: text("branch").notNull(),
-  section: text("section").notNull(),
+  year: text("year").notNull(),
   imageUrl: text("image_url"),
 });
 
@@ -30,7 +30,7 @@ export const insertStudentSchema = createInsertSchema(students).pick({
   rollNumber: true,
   name: true,
   branch: true,
-  section: true,
+  year: true,
   imageUrl: true,
 });
 

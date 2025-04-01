@@ -35,7 +35,7 @@ interface GFGProfile {
 async function runPythonScraper(excelPath: string): Promise<any> {
   try {
     await execAsync(
-      `. attached_assets/venv/bin/activate && python3 attached_assets/extractData_copy.py "${excelPath}"`,
+      `python attached_assets/extractData_copy.py "${excelPath}"`,
     );
     const data = await fs.readFile("students_profiles.json", "utf-8");
     return JSON.parse(data).Profiles;

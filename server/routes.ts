@@ -65,20 +65,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get students by branch and section
+  // Get students by branch and year
   app.get("/api/students", async (req: Request, res: Response) => {
     try {
-      const { branch, section } = req.query;
+      const { branch, year } = req.query;
 
-      if (typeof branch !== "string" || typeof section !== "string") {
+      if (typeof branch !== "string" || typeof year !== "string") {
         return res
           .status(400)
-          .json({ message: "Branch and section are required" });
+          .json({ message: "Branch and year are required" });
       }
 
-      const students = await storage.getStudentsByBranchAndSection(
+      const students = await storage.getStudentsByBranchAndyear(
         branch,
-        section,
+        year,
       );
 
       // Get profiles for all students
@@ -109,23 +109,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   };
 
-  // Delete students by section (admin only) - most specific route first
+  // Delete students by year (admin only) - most specific route first
   app.delete(
-    "/api/students/branch/:branch/section/:section",
+    "/api/students/branch/:branch/year/:year",
     isAdmin,
     async (req: Request, res: Response) => {
       try {
-        const { branch, section } = req.params;
-        const deletedCount = await storage.deleteStudentsBySection(
+        const { branch, year } = req.params;
+        const deletedCount = await storage.deleteStudentsByyear(
           branch,
-          section,
+          year,
         );
 
         return res.json({
-          message: `Successfully deleted ${deletedCount} students from branch ${branch}, section ${section}`,
+          message: `Successfully deleted ${deletedCount} students from branch ${branch}, year ${year}`,
         });
       } catch (error) {
-        console.error("Error deleting students by section:", error);
+        console.error("Error deleting students by year:", error);
         return res.status(500).json({ message: "Internal server error" });
       }
     },
@@ -182,11 +182,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(400).json({ message: "No file uploaded" });
         }
 
-        const { branch, section } = req.body;
-        if (!branch || !section) {
+        const { branch, year } = req.body;
+        if (!branch || !year) {
           return res
             .status(400)
-            .json({ message: "Branch and section are required" });
+            .json({ message: "Branch and year are required" });
         }
 
         // Parse Excel data
@@ -286,7 +286,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           rollNumber: String(row["Roll Number"]),
           name: String(row["Name"]),
           branch,
-          section,
+          year,
           imageUrl: `https://info.aec.edu.in/AEC/StudentPhotos/${row["Roll Number"]}.jpg`,
           profile: processedProfiles[index],
         }));

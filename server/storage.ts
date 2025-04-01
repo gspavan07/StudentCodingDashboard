@@ -25,9 +25,9 @@ export interface IStorage {
 
   // Student operations
   getStudents(): Promise<Student[]>;
-  getStudentsByBranchAndSection(
+  getStudentsByBranchAndyear(
     branch: string,
-    section: string,
+    year: string,
   ): Promise<Student[]>;
   getStudentByRollNumber(rollNumber: string): Promise<Student | undefined>;
   createStudent(student: InsertStudent): Promise<Student>;
@@ -38,7 +38,7 @@ export interface IStorage {
   deleteStudent(id: number): Promise<boolean>;
   deleteStudentByRollNumber(rollNumber: string): Promise<boolean>;
   deleteStudentsByBranch(branch: string): Promise<number>;
-  deleteStudentsBySection(branch: string, section: string): Promise<number>;
+  deleteStudentsByyear(branch: string, year: string): Promise<number>;
 
   // Coding Profile operations
   getCodingProfile(studentId: number): Promise<CodingProfile | undefined>;
@@ -165,12 +165,12 @@ export class MemStorage implements IStorage {
     return Array.from(this.students.values());
   }
 
-  async getStudentsByBranchAndSection(
+  async getStudentsByBranchAndyear(
     branch: string,
-    section: string,
+    year: string,
   ): Promise<Student[]> {
     return Array.from(this.students.values()).filter(
-      (student) => student.branch === branch && student.section === section,
+      (student) => student.branch === branch && student.year === year,
     );
   }
 
@@ -253,14 +253,14 @@ export class MemStorage implements IStorage {
     return deletedCount;
   }
 
-  async deleteStudentsBySection(
+  async deleteStudentsByyear(
     branch: string,
-    section: string,
+    year: string,
   ): Promise<number> {
     let deletedCount = 0;
 
-    // Get all students with specified branch and section
-    const students = await this.getStudentsByBranchAndSection(branch, section);
+    // Get all students with specified branch and year
+    const students = await this.getStudentsByBranchAndyear(branch, year);
 
     // Delete each student
     for (const student of students) {

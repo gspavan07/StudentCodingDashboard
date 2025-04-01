@@ -39,7 +39,7 @@ interface DeleteDataDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-type DeleteMode = "student" | "branch" | "section";
+type DeleteMode = "student" | "branch" | "year";
 
 export function DeleteDataDialog({ open, onOpenChange }: DeleteDataDialogProps) {
   const { toast } = useToast();
@@ -48,7 +48,7 @@ export function DeleteDataDialog({ open, onOpenChange }: DeleteDataDialogProps) 
   
   const [deleteMode, setDeleteMode] = useState<DeleteMode>("student");
   const [selectedBranch, setSelectedBranch] = useState("");
-  const [selectedSection, setSelectedSection] = useState("");
+  const [selectedyear, setselectedyear] = useState("");
   const [selectedRollNumber, setSelectedRollNumber] = useState("");
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   
@@ -62,17 +62,17 @@ export function DeleteDataDialog({ open, onOpenChange }: DeleteDataDialogProps) 
     enabled: open,
   });
   
-  // Extract unique branches and sections
+  // Extract unique branches and years
   const branches = Array.from(
     new Set(students.map((student) => student.branch))
   ).sort();
   
-  const sections = selectedBranch
+  const years = selectedBranch
     ? Array.from(
         new Set(
           students
             .filter(student => student.branch === selectedBranch)
-            .map(student => student.section)
+            .map(student => student.year)
         )
       ).sort()
     : [];
@@ -80,11 +80,11 @@ export function DeleteDataDialog({ open, onOpenChange }: DeleteDataDialogProps) 
   const studentsForSelection = (() => {
     if (deleteMode === "student") {
       return students;
-    } else if (deleteMode === "section" && selectedBranch && selectedSection) {
+    } else if (deleteMode === "year" && selectedBranch && selectedyear) {
       return students.filter(
         student => 
           student.branch === selectedBranch && 
-          student.section === selectedSection
+          student.year === selectedyear
       );
     } else if (deleteMode === "branch" && selectedBranch) {
       return students.filter(student => student.branch === selectedBranch);
@@ -96,7 +96,7 @@ export function DeleteDataDialog({ open, onOpenChange }: DeleteDataDialogProps) 
   const handleDeleteModeChange = (value: DeleteMode) => {
     setDeleteMode(value);
     setSelectedBranch("");
-    setSelectedSection("");
+    setselectedyear("");
     setSelectedRollNumber("");
   };
   
@@ -109,8 +109,8 @@ export function DeleteDataDialog({ open, onOpenChange }: DeleteDataDialogProps) 
           : "Are you sure you want to delete this student?";
       case "branch":
         return `Are you sure you want to delete ALL students from branch "${selectedBranch}"? This will delete ${studentsForSelection.length} students.`;
-      case "section":
-        return `Are you sure you want to delete ALL students from branch "${selectedBranch}", section "${selectedSection}"? This will delete ${studentsForSelection.length} students.`;
+      case "year":
+        return `Are you sure you want to delete ALL students from branch "${selectedBranch}", year "${selectedyear}"? This will delete ${studentsForSelection.length} students.`;
       default:
         return "Are you sure you want to proceed?";
     }
@@ -129,10 +129,10 @@ export function DeleteDataDialog({ open, onOpenChange }: DeleteDataDialogProps) 
           method: "DELETE",
           url: `/api/students/branch/${selectedBranch}`
         });
-      } else if (deleteMode === "section" && selectedBranch && selectedSection) {
+      } else if (deleteMode === "year" && selectedBranch && selectedyear) {
         return apiRequest<any>({ 
           method: "DELETE",
-          url: `/api/students/branch/${selectedBranch}/section/${selectedSection}`
+          url: `/api/students/branch/${selectedBranch}/year/${selectedyear}`
         });
       }
       throw new Error("Invalid delete operation");
@@ -150,7 +150,7 @@ export function DeleteDataDialog({ open, onOpenChange }: DeleteDataDialogProps) 
       
       // Reset form and close dialogs
       setSelectedBranch("");
-      setSelectedSection("");
+      setselectedyear("");
       setSelectedRollNumber("");
       setConfirmDialogOpen(false);
       onOpenChange(false);
@@ -170,7 +170,7 @@ export function DeleteDataDialog({ open, onOpenChange }: DeleteDataDialogProps) 
   const isSubmitDisabled = 
     (deleteMode === "student" && !selectedRollNumber) ||
     (deleteMode === "branch" && !selectedBranch) ||
-    (deleteMode === "section" && (!selectedBranch || !selectedSection)) ||
+    (deleteMode === "year" && (!selectedBranch || !selectedyear)) ||
     deleteStudentMutation.isPending;
   
   // Handle form submission
@@ -212,14 +212,14 @@ export function DeleteDataDialog({ open, onOpenChange }: DeleteDataDialogProps) 
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="student">Individual Student</SelectItem>
-                  <SelectItem value="section">Entire Section</SelectItem>
+                  <SelectItem value="year">Entire year</SelectItem>
                   <SelectItem value="branch">Entire Branch</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
-            {/* Branch selection for branch or section delete mode */}
-            {(deleteMode === "branch" || deleteMode === "section") && (
+            {/* Branch selection for branch or year delete mode */}
+            {(deleteMode === "branch" || deleteMode === "year") && (
               <div className="space-y-2">
                 <label className="text-sm font-medium">Branch</label>
                 <Select 
@@ -243,23 +243,23 @@ export function DeleteDataDialog({ open, onOpenChange }: DeleteDataDialogProps) 
               </div>
             )}
             
-            {/* Section selection for section delete mode */}
-            {deleteMode === "section" && selectedBranch && (
+            {/* year selection for year delete mode */}
+            {deleteMode === "year" && selectedBranch && (
               <div className="space-y-2">
-                <label className="text-sm font-medium">Section</label>
+                <label className="text-sm font-medium">year</label>
                 <Select 
-                  value={selectedSection} 
-                  onValueChange={setSelectedSection}
+                  value={selectedyear} 
+                  onValueChange={setselectedyear}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select section" />
+                    <SelectValue placeholder="Select year" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Sections</SelectLabel>
-                      {sections.map((section) => (
-                        <SelectItem key={section} value={section}>
-                          {section}
+                      <SelectLabel>years</SelectLabel>
+                      {years.map((year) => (
+                        <SelectItem key={year} value={year}>
+                          {year}
                         </SelectItem>
                       ))}
                     </SelectGroup>
@@ -284,7 +284,7 @@ export function DeleteDataDialog({ open, onOpenChange }: DeleteDataDialogProps) 
                       <SelectLabel>Students</SelectLabel>
                       {students.map((student) => (
                         <SelectItem key={student.rollNumber} value={student.rollNumber}>
-                          {student.name} ({student.rollNumber}) - {student.branch} {student.section}
+                          {student.name} ({student.rollNumber}) - {student.branch} {student.year}
                         </SelectItem>
                       ))}
                     </SelectGroup>

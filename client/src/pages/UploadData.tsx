@@ -25,11 +25,11 @@ const branches = [
   { value: "MCA", label: "MCA" },
 ];
 
-const sections = [
-  { value: "A", label: "Section A" },
-  { value: "B", label: "Section B" },
-  { value: "C", label: "Section C" },
-  { value: "D", label: "Section D" },
+const years = [
+  { value: "1st", label: "1st year " },
+  { value: "2nd", label: "2nd year " },
+  { value: "3rd", label: "3rd year " },
+  { value: "4th", label: "4th year " },
 ];
 
 const generateTemplateFile = () => {
@@ -87,7 +87,7 @@ const generateTemplateFile = () => {
 
 const UploadData = () => {
   const [branch, setBranch] = useState("");
-  const [section, setSection] = useState("");
+  const [year, setyear] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -180,10 +180,10 @@ const UploadData = () => {
       return;
     }
     
-    if (!section) {
+    if (!year) {
       toast({
-        title: "Section required",
-        description: "Please select a section",
+        title: "year required",
+        description: "Please select a year",
         variant: "destructive",
       });
       return;
@@ -205,7 +205,7 @@ const UploadData = () => {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('branch', branch);
-      formData.append('section', section);
+      formData.append('year', year);
       
       // Use XMLHttpRequest instead of fetch to better handle file uploads
       const xhr = new XMLHttpRequest();
@@ -279,7 +279,7 @@ const UploadData = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Branch & Section Selection */}
+            {/* Branch & year Selection */}
             <div className="md:col-span-1">
               <div className="space-y-4">
                 <div>
@@ -299,15 +299,15 @@ const UploadData = () => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="sectionSelect">Section</Label>
-                  <Select value={section} onValueChange={setSection}>
-                    <SelectTrigger id="sectionSelect" className="mt-1">
-                      <SelectValue placeholder="Select Section" />
+                  <Label htmlFor="yearSelect">Year</Label>
+                  <Select value={year} onValueChange={setyear}>
+                    <SelectTrigger id="yearSelect" className="mt-1">
+                      <SelectValue placeholder="Select Year" />
                     </SelectTrigger>
                     <SelectContent>
-                      {sections.map(sectionOption => (
-                        <SelectItem key={sectionOption.value} value={sectionOption.value}>
-                          {sectionOption.label}
+                      {years.map(yearOption => (
+                        <SelectItem key={yearOption.value} value={yearOption.value}>
+                          {yearOption.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -437,7 +437,7 @@ const UploadData = () => {
                 <div className="mt-4">
                   <Button 
                     onClick={handleUpload}
-                    disabled={!file || !branch || !section || isUploading}
+                    disabled={!file || !branch || !year || isUploading}
                     className="w-full"
                   >
                     {isUploading ? (

@@ -34,12 +34,12 @@ import {
   UserIcon,
 } from "lucide-react";
 
-type RankingTab = "overall" | "branch" | "section";
+type RankingTab = "overall" | "branch" | "year";
 
 const Rankings = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBranch, setSelectedBranch] = useState<string>("");
-  const [selectedSection, setSelectedSection] = useState<string>("");
+  const [selectyear, setselectyear] = useState<string>("");
   const [rankingLimit, setRankingLimit] = useState<number>(10);
   const [activeTab, setActiveTab] = useState<RankingTab>("overall");
   const [selectedStudent, setSelectedStudent] =
@@ -56,7 +56,7 @@ const Rankings = () => {
     queryKey: ["/api/students/all"],
   });
 
-  // Extract unique branches and sections for filters
+  // Extract unique branches and years for filters
   const branches = useMemo(() => {
     if (!allStudents) return [];
     const branchSet = new Set<string>();
@@ -66,15 +66,15 @@ const Rankings = () => {
     return Array.from(branchSet).sort();
   }, [allStudents]);
 
-  const sections = useMemo(() => {
+  const years = useMemo(() => {
     if (!allStudents || !selectedBranch) return [];
-    const sectionSet = new Set<string>();
+    const yearSet = new Set<string>();
     allStudents.forEach((student) => {
-      if (student.branch === selectedBranch && student.section) {
-        sectionSet.add(student.section);
+      if (student.branch === selectedBranch && student.year) {
+        yearSet.add(student.year);
       }
     });
-    return Array.from(sectionSet).sort();
+    return Array.from(yearSet).sort();
   }, [allStudents, selectedBranch]);
 
   // Calculate scores for each student
@@ -109,7 +109,7 @@ const Rankings = () => {
     });
   }, [allStudents]);
 
-  // Apply filters based on tab, branch, section
+  // Apply filters based on tab, branch, year
   const filteredStudents = useMemo(() => {
     if (!studentsWithScores) return [];
 
@@ -120,11 +120,11 @@ const Rankings = () => {
       filtered = filtered.filter(
         (student) => student.branch === selectedBranch,
       );
-    } else if (activeTab === "section" && selectedBranch && selectedSection) {
+    } else if (activeTab === "year" && selectedBranch && selectyear) {
       filtered = filtered.filter(
         (student) =>
           student.branch === selectedBranch &&
-          student.section === selectedSection,
+          student.year === selectyear,
       );
     }
 
@@ -150,7 +150,7 @@ const Rankings = () => {
     studentsWithScores,
     activeTab,
     selectedBranch,
-    selectedSection,
+    selectyear,
     searchTerm,
     rankingLimit,
   ]);
@@ -169,11 +169,11 @@ let fileName = `${day}_${month}_${year}_rankings`;
         if (activeTab === "branch" && selectedBranch) {
           fileName = `${day}_${month}_${year}_${selectedBranch}_rankings`;
         } else if (
-          activeTab === "section" &&
+          activeTab === "year" &&
           selectedBranch &&
-          selectedSection
+          selectyear
         ) {
-          fileName = `${day}_${month}_${year}_${selectedBranch}_${selectedSection}_rankings`;
+          fileName = `${day}_${month}_${year}_${selectedBranch}_${selectyear}_rankings`;
         }
 
         exportStudentsToExcel(filteredStudents, fileName);
@@ -227,7 +227,7 @@ let fileName = `${day}_${month}_${year}_rankings`;
           Student Rankings
         </h1>
         <p className="text-lg text-gray-500 dark:text-gray-400">
-          Compare performance across branches and sections
+          Compare performance across branches and years
         </p>
       </div>
 
@@ -241,7 +241,7 @@ let fileName = `${day}_${month}_${year}_rankings`;
             <TabsList className="mb-4 md:mb-0">
               <TabsTrigger value="overall">Overall Rankings</TabsTrigger>
               <TabsTrigger value="branch">Branch Rankings</TabsTrigger>
-              <TabsTrigger value="section">Section Rankings</TabsTrigger>
+              <TabsTrigger value="year">Year Rankings</TabsTrigger>
             </TabsList>
 
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
@@ -290,20 +290,20 @@ let fileName = `${day}_${month}_${year}_rankings`;
               </div>
             )}
 
-            {activeTab === "section" && (
+            {activeTab === "year" && (
               <div className="w-full sm:w-auto">
                 <Select
-                  value={selectedSection}
-                  onValueChange={setSelectedSection}
+                  value={selectyear}
+                  onValueChange={setselectyear}
                   disabled={!selectedBranch}
                 >
                   <SelectTrigger className="w-full sm:w-[180px]">
-                    <SelectValue placeholder="Select Section" />
+                    <SelectValue placeholder="Select Year" />
                   </SelectTrigger>
                   <SelectContent>
-                    {sections.map((section) => (
-                      <SelectItem key={section} value={section}>
-                        {section}
+                    {years.map((year) => (
+                      <SelectItem key={year} value={year}>
+                        {year}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -374,12 +374,12 @@ let fileName = `${day}_${month}_${year}_rankings`;
             )}
           </TabsContent>
 
-          <TabsContent value="section" className="mt-0">
-            {!selectedBranch || !selectedSection ? (
+          <TabsContent value="year" className="mt-0">
+            {!selectedBranch || !selectyear ? (
               <Card>
                 <CardContent className="pt-6 pb-6 text-center">
                   <p className="text-gray-500 dark:text-gray-400">
-                    Please select both branch and section to view rankings.
+                    Please select both branch and year to view rankings.
                   </p>
                 </CardContent>
               </Card>
@@ -431,12 +431,12 @@ const RankingTable = ({
     <div className="rounded-md border">
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="bg-gray-100">
             <TableHead className="w-[100px]">Rank</TableHead>
             <TableHead>Student</TableHead>
             <TableHead>Roll Number</TableHead>
             <TableHead>Branch</TableHead>
-            <TableHead>Section</TableHead>
+            <TableHead>Year</TableHead>
             <TableHead className="text-right">Score</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
@@ -468,7 +468,7 @@ const RankingTable = ({
               </TableCell>
               <TableCell>{student.rollNumber}</TableCell>
               <TableCell>{student.branch}</TableCell>
-              <TableCell>{student.section}</TableCell>
+              <TableCell>{student.year}</TableCell>
               <TableCell className="text-right font-semibold">
                 {student.score}
               </TableCell>

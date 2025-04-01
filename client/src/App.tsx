@@ -18,7 +18,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/branches/:branch/:section" component={StudentData} />
+      <Route path="/branches/:branch/:year" component={StudentData} />
       <Route path="/branches" component={Branches} />
       <Route path="/rankings" component={Rankings} />
       <Route path="/upload" component={UploadData} />

@@ -24,7 +24,7 @@ const branches = [
   { name: "MCA", label: "MCA" },
 ];
 
-const sections = ["A", "B", "C", "D"];
+const years = ["1","2","3","4"];
 
 const Navbar = () => {
   const [location] = useLocation();
@@ -79,15 +79,15 @@ const Navbar = () => {
                         <ChevronDown className="h-4 w-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="min-w-[8rem]">
-                        <DropdownMenuLabel>Select Section</DropdownMenuLabel>
+                        <DropdownMenuLabel>Select Year</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        {sections.map((section) => (
+                        {years.map((year) => (
                           <Link
-                            key={section}
-                            href={`/branches/${branch.name}/${section}`}
+                            key={year}
+                            href={`/branches/${branch.name}/${year}`}
                           >
                             <DropdownMenuItem className="cursor-pointer">
-                              Section {section}
+                              {year} year
                             </DropdownMenuItem>
                           </Link>
                         ))}
@@ -123,9 +123,9 @@ const Navbar = () => {
           {/* Right Side Controls */}
           <div className="flex items-center">
             {/* Theme Toggle */}
-            <div className="ml-3">
+            {/* <div className="ml-3">
               <ThemeToggle />
-            </div>
+            </div> */}
               
             {/* Auth Controls */}
             <div className="ml-3 relative">

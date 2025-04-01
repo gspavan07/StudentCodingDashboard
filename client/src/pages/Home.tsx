@@ -67,7 +67,7 @@ const Home = () => {
             ["Name", student.name],
             ["Roll Number", student.rollNumber],
             ["Branch", student.branch],
-            ["Section", student.section || "N/A"]
+            ["year", student.year || "N/A"]
           ];
     
           const codingStats = [
@@ -153,7 +153,7 @@ const Home = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Hero Section */}
+      {/* Hero year */}
       <section className="py-12 md:py-20 relative">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl text-gray-900 dark:text-white">
@@ -583,7 +583,7 @@ const Home = () => {
                 </h3>
                 <p className="mt-2 text-base text-gray-500 dark:text-gray-400">
                   Admin tools for uploading and managing multiple student
-                  profiles by branch and section.
+                  profiles by branch and year.
                 </p>
               </CardContent>
             </Card>
@@ -606,8 +606,8 @@ const Home = () => {
                   Branch Navigation
                 </h3>
                 <p className="mt-2 text-base text-gray-500 dark:text-gray-400">
-                  Browse student profiles by department branches and class
-                  sections for easy organization.
+                  Browse student profiles by department branches and 
+                  year for easy organization.
                 </p>
               </CardContent>
             </Card>
